@@ -3,7 +3,12 @@ const router = express.Router();
 
 const storeCtrl = require('../controllers/storeCtrl')
 
-// Do work here
+// default route
 router.get('/', storeCtrl.homePage);
+
+// add store
+router.route('/add')
+  .get(storeCtrl.addStore)
+  .post(storeCtrl.createStore);
 
 module.exports = router;
