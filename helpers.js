@@ -27,3 +27,15 @@ exports.menu = [
   { slug: '/add', title: 'Add', icon: 'add', },
   { slug: '/map', title: 'Map', icon: 'map', },
 ];
+
+exports.choices = [
+  'Pommes',
+  'Döner',
+  'Schranke',
+  'Pommes Schranke mit Döner',
+  'Gummibärchen',
+  'Captain Morgan'
+];
+
+exports.shorten = (str, max) => str.split(' ').slice(0, max).join(' ');
+exports.storeImage = img => `/uploads/${img || 'store.png'}`
