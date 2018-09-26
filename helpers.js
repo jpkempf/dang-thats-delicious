@@ -34,7 +34,8 @@ exports.choices = [
   'Schranke',
   'Pommes Schranke mit Döner',
   'Gummibärchen',
-  'Captain Morgan'
+  'Captain Morgan',
+  'Burger'
 ];
 
 exports.shorten = (str, max) => str.split(' ').slice(0, max).join(' ');

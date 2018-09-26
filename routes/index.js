@@ -13,10 +13,18 @@ router.get('/stores', catchErrors(storeCtrl.getStores));
 // add store
 router.route('/add')
   .get(storeCtrl.addStore)
-  .post(catchErrors(storeCtrl.createStore));
+  .post(
+    storeCtrl.upload,
+    catchErrors(storeCtrl.resize),
+    catchErrors(storeCtrl.createStore)
+  );
 
 // edit store
 router.get('/stores/:id/edit', catchErrors(storeCtrl.editStore));
-router.post('/add/:id', catchErrors(storeCtrl.updateStore))
+router.post('/add/:id',
+  storeCtrl.upload,
+  catchErrors(storeCtrl.resize),
+  catchErrors(storeCtrl.updateStore)
+);
 
 module.exports = router;
