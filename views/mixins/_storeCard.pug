@@ -7,6 +7,6 @@ mixin storeCard(store = {})
                         != h.icon('pencil')
             img(src=h.storeImage(store.photo))
             h2.title
-                a(href=`/store/${store.slug}`)= h.shorten(store.name, 2)
+                a(href=`/stores/${store.slug}`)= h.shorten(store.name, 2)
         .store__details
             p= h.shorten(store.description, 25)

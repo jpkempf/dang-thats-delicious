@@ -26,6 +26,14 @@ exports.getStores = async (req, res) => {
     res.render('getStores', { title: 'Stores', stores });
 }
 
+exports.getStoreBySlug = async (req, res, next) => {
+    const store = await Store.findOne({ slug: req.params.slug });
+
+    if (!store) return next();
+
+    res.render('getStore', { title: store.name, store });
+}
+
 exports.addStore = (req, res) => {
     res.render('editStore', { title: 'Add store' });
 }

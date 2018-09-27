@@ -10,6 +10,9 @@ router.get('/', storeCtrl.homePage);
 // get stores
 router.get('/stores', catchErrors(storeCtrl.getStores));
 
+// get single store
+router.get('/stores/:slug', catchErrors(storeCtrl.getStoreBySlug));
+
 // add store
 router.route('/add')
   .get(storeCtrl.addStore)
