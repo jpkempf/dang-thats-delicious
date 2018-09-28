@@ -4,6 +4,7 @@ const router = express.Router();
 const { redirect } = require('../helpers');
 const { catchErrors } = require('../handlers/errorHandlers');
 const storeCtrl = require('../controllers/storeCtrl');
+const userCtrl = require('../controllers/userCtrl');
 
 // default route
 router.get('/', redirect('/stores'));
@@ -35,4 +36,16 @@ router.post('/add/:id',
 router.get('/tags', catchErrors(storeCtrl.getStoresByTag));
 router.get('/tags/:tag', catchErrors(storeCtrl.getStoresByTag));
 
+// registration & login
+router.route('/register')
+  .get(userCtrl.registerForm)
+  .post(
+    userCtrl.validateRegistration,
+    catchErrors(userCtrl.register)
+  );
+
+router.route('/login')
+  .get(userCtrl.loginForm);
+
+// default export
 module.exports = router;
