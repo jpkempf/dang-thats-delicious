@@ -16,10 +16,6 @@ const multerOptions = {
     }
 }
 
-exports.homePage = (req, res) => {
-    res.render('index');
-}
-
 exports.getStores = async (req, res) => {
     const stores = await Store.find();
 
@@ -80,4 +76,17 @@ exports.editStore = async (req, res) => {
     const store = await Store.findById(req.params.id);
 
     res.render('editStore', { title: `Edit ${store.name}`, store });
+}
+
+exports.getStoresByTag = async (req, res) => {
+    const tag = req.params.tag;
+    const [ tags, stores ] = await Promise.all([
+        Store.getTagsList(),
+        Store.find({ tags: tag || { $exists: true } }),
+    ]);
+
+    res.render('getStoresByTag', {
+        title: tag || 'Tags',
+        tag, tags, stores
+    });
 }

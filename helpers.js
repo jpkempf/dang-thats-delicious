@@ -40,3 +40,4 @@ exports.choices = [
 
 exports.shorten = (str, max) => str.split(' ').slice(0, max).join(' ');
 exports.storeImage = img => `/uploads/${img || 'store.png'}`
+exports.redirect = path => (req, res)=> res.redirect(path);

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const { redirect } = require('../helpers');
 const { catchErrors } = require('../handlers/errorHandlers');
 const storeCtrl = require('../controllers/storeCtrl');
 
 // default route
-router.get('/', storeCtrl.homePage);
+router.get('/', redirect('/stores'));
 
 // get stores
 router.get('/stores', catchErrors(storeCtrl.getStores));
@@ -29,5 +30,9 @@ router.post('/add/:id',
   catchErrors(storeCtrl.resize),
   catchErrors(storeCtrl.updateStore)
 );
+
+// list tags and related stores
+router.get('/tags', catchErrors(storeCtrl.getStoresByTag));
+router.get('/tags/:tag', catchErrors(storeCtrl.getStoresByTag));
 
 module.exports = router;
