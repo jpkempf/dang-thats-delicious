@@ -3,21 +3,25 @@ const router = express.Router();
 
 const { redirect } = require('../helpers');
 const { catchErrors } = require('../handlers/errorHandlers');
+const authCtrl = require('../controllers/authCtrl');
 const storeCtrl = require('../controllers/storeCtrl');
 const userCtrl = require('../controllers/userCtrl');
 
-// default route
-router.get('/', redirect('/stores'));
-
-// get stores
-router.get('/stores', catchErrors(storeCtrl.getStores));
+// get stores (the default route)
+router.get([
+  '/',
+  '/stores'
+], catchErrors(storeCtrl.getStores));
 
 // get single store
 router.get('/stores/:slug', catchErrors(storeCtrl.getStoreBySlug));
 
 // add store
 router.route('/add')
-  .get(storeCtrl.addStore)
+  .get(
+    authCtrl.isLoggedIn,
+    storeCtrl.addStore
+  )
   .post(
     storeCtrl.upload,
     catchErrors(storeCtrl.resize),
@@ -25,7 +29,10 @@ router.route('/add')
   );
 
 // edit store
-router.get('/stores/:id/edit', catchErrors(storeCtrl.editStore));
+router.get('/stores/:id/edit',
+  authCtrl.isLoggedIn,
+  catchErrors(storeCtrl.editStore)
+);
 router.post('/add/:id',
   storeCtrl.upload,
   catchErrors(storeCtrl.resize),
@@ -36,16 +43,28 @@ router.post('/add/:id',
 router.get('/tags', catchErrors(storeCtrl.getStoresByTag));
 router.get('/tags/:tag', catchErrors(storeCtrl.getStoresByTag));
 
-// registration & login
+// registration, login, logout
 router.route('/register')
   .get(userCtrl.registerForm)
   .post(
     userCtrl.validateRegistration,
-    catchErrors(userCtrl.register)
+    catchErrors(userCtrl.register),
+    authCtrl.login
   );
 
 router.route('/login')
-  .get(userCtrl.loginForm);
+  .get(userCtrl.loginForm)
+  .post(authCtrl.login);
+
+router.get('/logout', authCtrl.logout);
+
+// edit account
+router.route('/account')
+  .get(
+    authCtrl.isLoggedIn,
+    userCtrl.account
+  )
+  .post(catchErrors(userCtrl.updateAccount));
 
 // default export
 module.exports = router;
