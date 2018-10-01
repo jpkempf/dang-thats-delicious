@@ -66,5 +66,16 @@ router.route('/account')
   )
   .post(catchErrors(userCtrl.updateAccount));
 
+// reset password
+router.route('/account/forgot')
+  .post(catchErrors(authCtrl.forgotPassword));
+
+router.route('/account/reset/:token')
+  .get(catchErrors(authCtrl.resetPassword))
+  .post(
+    authCtrl.validatePassword,
+    catchErrors(authCtrl.updatePassword)
+  );
+
 // default export
 module.exports = router;
