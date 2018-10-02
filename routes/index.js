@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { redirect } = require('../helpers');
-const { catchErrors } = require('../handlers/errorHandlers');
+const { catchErrors } = require('../handlers/errors');
 const authCtrl = require('../controllers/authCtrl');
 const storeCtrl = require('../controllers/storeCtrl');
 const userCtrl = require('../controllers/userCtrl');
