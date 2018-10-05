@@ -77,5 +77,11 @@ router.route('/account/reset/:token')
     catchErrors(authCtrl.updatePassword)
   );
 
+/**
+ * API endpoints
+ */
+
+router.get('/api/search/', catchErrors(storeCtrl.searchStores));
+
 // default export
 module.exports = router;
