@@ -77,11 +77,15 @@ router.route('/account/reset/:token')
     catchErrors(authCtrl.updatePassword)
   );
 
+// map
+router.get('/map', storeCtrl.showMap);
+
 /**
  * API endpoints
  */
 
 router.get('/api/search/', catchErrors(storeCtrl.searchStores));
+router.get('/api/stores/near', catchErrors(storeCtrl.mapStores));
 
 // default export
 module.exports = router;
