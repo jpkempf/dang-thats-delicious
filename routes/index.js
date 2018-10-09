@@ -88,11 +88,13 @@ router.get('/hearts',
 );
 
 // reviews
-router.route('/reviews/:id')
-    .post(
-      authCtrl.isLoggedIn,
-      catchErrors(reviewCtrl.addReview)
-    );
+router.post('/reviews/:id',
+  authCtrl.isLoggedIn,
+  catchErrors(reviewCtrl.addReview)
+);
+
+// top stores
+router.get('/top', catchErrors(storeCtrl.getTopStores));
 
 /**
  * API endpoints

@@ -39,6 +39,9 @@ const storeSchema = new Schema({
         ref: 'User',
         required: 'Please supply an author!'
     }
+}, { // config object
+    toJSON: { virtuals: true }, // show virtual fields show up in json dumps
+    toObject: { virtuals: true },
 });
 
 storeSchema.index({
@@ -66,9 +69,52 @@ storeSchema.pre('save', async function(next) {
 storeSchema.statics.getTagsList = function() {
     return this.aggregate([
         { $unwind: '$tags'},
-        { $group: { _id: '$tags', count: { $sum: 1 } } },
-        { $sort: { count: -1 } }
+        { $group: { _id: '$tags', count: { $sum: 1 }}},
+        { $sort: { count: -1 }}
     ]);
 }
+
+storeSchema.statics.getTopStores = function() {
+    return this.aggregate([
+        // get stores, populate their reviews
+        // this is basically the same as the virtual reviews field
+        // but directly in mongodb
+        { $lookup: {
+            from: 'reviews', // ref: 'Review'
+            localField: '_id', // the store id
+            foreignField: 'store', // the same id in the reviews
+            as: 'reviews' // name of the new field on the aggregate
+        }},
+
+        // filter for stores with >2 reviews
+        // test for reviews[1], i.e. reviews array has at least 2 elements
+        { $match: { 'reviews.1': { $exists: true }}},
+
+        // add new field for average review score
+        { $addFields: {
+            averageRating: { $avg: '$reviews.rating' }
+        }},
+
+        // sort by average review score
+        { $sort: { averageRating: -1 }},
+
+        // limit to top 10 results
+        { $limit: 10 }
+    ]);
+}
+
+storeSchema.virtual('reviews', {
+    ref: 'Review', // what model to link with Store
+    localField: '_id', // name of the field on the Store
+    foreignField: 'store' // name of the field on the Review
+});
+
+function autopopulate(next) {
+    this.populate('reviews');
+    next();
+}
+
+storeSchema.pre('find', autopopulate);
+storeSchema.pre('findOne', autopopulate);
 
 module.exports = mongoose.model('Store', storeSchema);
