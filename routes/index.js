@@ -12,6 +12,7 @@ const reviewCtrl = require('../controllers/reviewCtrl');
 router.get([
   '/',
   '/stores',
+  '/stores/page/:page',
 ], catchErrors(storeCtrl.getStores));
 
 // get single store
