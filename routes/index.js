@@ -6,11 +6,12 @@ const { catchErrors } = require('../handlers/errors');
 const authCtrl = require('../controllers/authCtrl');
 const storeCtrl = require('../controllers/storeCtrl');
 const userCtrl = require('../controllers/userCtrl');
+const reviewCtrl = require('../controllers/reviewCtrl');
 
 // get stores (the default route)
 router.get([
   '/',
-  '/stores'
+  '/stores',
 ], catchErrors(storeCtrl.getStores));
 
 // get single store
@@ -80,12 +81,26 @@ router.route('/account/reset/:token')
 // map
 router.get('/map', storeCtrl.showMap);
 
+// hearted stores
+router.get('/hearts',
+  authCtrl.isLoggedIn,
+  catchErrors(storeCtrl.getHeartedStores)
+);
+
+// reviews
+router.route('/reviews/:id')
+    .post(
+      authCtrl.isLoggedIn,
+      catchErrors(reviewCtrl.addReview)
+    );
+
 /**
  * API endpoints
  */
 
 router.get('/api/search/', catchErrors(storeCtrl.searchStores));
 router.get('/api/stores/near', catchErrors(storeCtrl.mapStores));
+router.post('/api/stores/:id/heart', catchErrors(storeCtrl.heartStore));
 
 // default export
 module.exports = router;

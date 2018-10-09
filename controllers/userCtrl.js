@@ -71,3 +71,7 @@ exports.updateAccount = async (req, res) => {
     req.flash('success', 'Account updated!');
     res.redirect('back');
 }
+
+exports.showHearts = (req, res) => {
+    res.render('hearts', { title: 'Hearted Stores' });
+}
